@@ -1,0 +1,6 @@
+<apex:page >
+    <apex:sectionHeader title="Odesk" subtitle="Control Panel"/>
+    <apex:pageBlock >
+    <apex:outputLink value="https://c.ap1.visual.force.com/apex/OAuthControlPanel" styleClass="btn">Use this Page</apex:outputLink>
+    </apex:pageBlock>
+</apex:page>

@@ -1,0 +1,24 @@
+<apex:page controller="OdeskAPITest_Con">
+    <apex:sectionHeader title="Odesk" subtitle="Odesk API"/>
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Send Request" action="{!sendRequest}"/>
+                
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1" title="Setup">
+                <apex:inputText style="width:100%" value="{!url}" label="URL"/>
+                <apex:selectList value="{!method}" size="1" multiselect="false" label="Method">
+                    <apex:selectOption itemLabel="GET" itemValue="GET"></apex:selectOption>
+                    <apex:selectOption itemLabel="POST" itemValue="POST"></apex:selectOption>
+                </apex:selectList>
+                <apex:inputTextarea rows="2" style="width:100%"  label="URL Param" value="{!param}" rendered="false"/>
+                <apex:inputTextarea rows="5" style="width:100%" value="{!body}" label="Body"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" title="Response">
+                <apex:inputTextarea rows="5" style="width:100%" disabled="true" label="Request Preview" value="{!request}"/>
+                <apex:inputTextarea rows="10" style="width:100%" disabled="true" label="Response" value="{!response}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

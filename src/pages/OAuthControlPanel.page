@@ -1,0 +1,88 @@
+<apex:page controller="OAuthControlPanel_con" id="pg">
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" /> 
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" /> 
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, 'css/ui-lightness/jquery-ui-1.8.16.custom.css')}" /> 
+    <apex:includeScript value="{!URLFOR($Resource.jqPlugin, '/jquery.blockUI.js')}"/> 
+    <script>
+        $j = jQuery.noConflict();
+
+        
+        function showDialog(title,msg){ 
+        $j("<div>"+msg+"<div>").dialog({ 
+            autoOpen: true, 
+            modal: true, 
+            position: 'center', 
+            title: title, 
+            show: 'explode', 
+            hide: 'explode', 
+            width: '400px', 
+            buttons: { 
+                OK: function() { 
+                     
+                    $j( this ).dialog( "close" );
+                    
+                    }
+                } 
+        }); 
+        return false; 
+    }  
+        function BlockUI(){ 
+            $j.blockUI({ message: '<img src="{!$Resource.busy}" />', 
+                css: { left: '0', width: '100%', border: 'none', padding: '5px', opacity: .9, } 
+                }); 
+                return false; 
+        }  
+        //some eyecandy 
+        function UnblockUI(){ 
+            $j.unblockUI(); 
+        }
+    </script>
+    <apex:form id="frm">
+   
+        <apex:actionStatus onStart="BlockUI()" id="status" onstop="UnblockUI()"/>
+        <apex:pagemessages ></apex:pagemessages>
+        <apex:sectionHeader title="Odesk Control Panel" subtitle="Authorize app"/>
+        <apex:outputPanel rendered="{!message!=null}">
+            <script>
+                showDialog('Error','Problem: {!message}');
+            </script>
+        </apex:outputPanel>
+        <apex:pageblock title="Authorize">
+        
+                <apex:outputpanel rendered="{!authState}">
+                    <div class=" ui-widget-content ui-corner-all" style="font-size: 1.2em;padding: 1em;">
+                        <center>
+                            <img src="/img/msg_icons/confirm32.png" /> 
+                            <apex:outputPanel layout="block" style="font-size:110%;margin-top:4px">
+                                <strong>Authorized</strong>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block">
+                                Odesk Integeration app is Authorized
+                            </apex:outputPanel>
+                        </center>
+                    </div>
+                </apex:outputpanel>
+                
+                <apex:outputpanel rendered="{!NOT(authState)}">
+                    <div class="ui-state-highlight ui-corner-all" style="padding: 1em;min-height:110px;font-size: 1.2em;"> 
+                        <center>
+                        <img src="/img/msg_icons/error32.png"/> 
+                        <apex:outputPanel layout="block" style="font-size:110%;color:red;margin-top:4px">
+                            <strong>Not Authorized</strong>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="block">
+                            <p> Please Authorize the application.</p> 
+                            <p>The application is not authorized to connect to your <b>Odesk</b> Account.</p>
+                            <p>Press the Authorize button,you will be redirected to the <b>Odesk</b> login page, Enter the <b>User Name</b> and <b>Password</b> and press <b>Allow</b> button to authorize. 
+                            </p>
+                        </apex:outputPanel>
+                        </center>
+                    </div>               
+                </apex:outputpanel>
+                <apex:pageBlockButtons >
+                    <apex:commandButton action="{!authorize}" value="Authorize" id="authButton" status="status" style="width:100px"/>
+                    <apex:commandButton action="{!revokeAccess}" value="Revoke Access" rendered="{!authState}" status="status" style="width:100px"/>
+                </apex:pageBlockButtons>
+        </apex:pageblock>    
+    </apex:form>
+</apex:page>

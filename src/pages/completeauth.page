@@ -1,0 +1,41 @@
+<apex:page controller="OAuthControlPanel_con" action="{!completeAuthorization}">
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-1.6.2.min.js')}" /> 
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, 'js/jquery-ui-1.8.16.custom.min.js')}" /> 
+    <apex:stylesheet value="{!URLFOR($Resource.jQuery, 'css/ui-lightness/jquery-ui-1.8.16.custom.css')}" /> 
+    <apex:includeScript value="{!URLFOR($Resource.jqPlugin, '/jquery.blockUI.js')}"/>
+    <script>
+        $j = jQuery.noConflict();
+        function showDialog(title,msg){ 
+        $j("<div>"+msg+"<div>").dialog({ 
+            autoOpen: true, 
+            modal: true, 
+            position: 'center', 
+            title: title, 
+            show: 'explode', 
+            hide: 'explode', 
+            width: '400px', 
+            buttons: { 
+                OK: function() { 
+                     
+                    $j( this ).dialog( "close" );
+                     
+                    }
+                } 
+        }); 
+        return false; 
+    } 
+    </script>
+    <apex:form >
+    
+    <apex:outputPanel rendered="{!authSuccess}">
+        <script>
+            showDialog('Success','Authorization with Odesk was Successfull');
+        </script>
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!(!authSuccess)}">
+        <script>
+            showDialog('Failure','Authorization with Odesk failed<br\>Message: {!message}');
+        </script>
+    </apex:outputPanel>
+   </apex:form>
+</apex:page>
