@@ -17,6 +17,12 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>OAuth_Connection__c</members>
+        <members>OAuth_Token__c</members>
+        <members>oDeskSettings__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
         <members>*</members>
         <name>StaticResource</name>
     </types>
