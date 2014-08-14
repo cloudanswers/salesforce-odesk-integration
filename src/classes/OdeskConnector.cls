@@ -4,20 +4,28 @@ public with sharing class OdeskConnector {
     private static FINAL String SERVICENAME = 'Odesk';
 
 
-    public  void retrieveUserDetail(){
+    public  void getUserDetail(){
         String serviceEndpoint = 'https://www.odesk.com/api/hr/v2/users/me.json';
         sendRequest(serviceEndpoint,'GET');
 
     }
 
-    public void retrieveJobs(){
-        String serviceEndpoint = 'https://www.odesk.com/api/hr/v2/jobs.json?buyer_team__reference=3976918';
+    public void getJobs(String btr){
+        String serviceEndpoint = 'https://www.odesk.com/api/hr/v2/jobs.json?buyer_team__reference='+btr;
         sendRequest(serviceEndpoint,'GET');
     }
 
-    public void retrieveEngagements(){
+    public void getEngagements(){
         String serviceEndpoint = 'https://www.odesk.com/api/hr/v2/engagements.json';
         sendRequest(serviceEndpoint,'GET');
+    }
+
+    public void getTeams(){
+        sendRequest('https://www.odesk.com/api/hr/v2/teams.json','GET');
+    }
+
+    public void getTimeReports(String cid,String qry){
+        sendRequest('https://www.odesk.com/gds/timereports/v1/companies/'+cid+'?tq='+qry,'GET');
     }
 
     /*Sends requests to endpoint after signing and adding in auth token for the service*/
@@ -26,7 +34,7 @@ public with sharing class OdeskConnector {
         String body;        
         HttpRequest req = new HttpRequest();
         req.setMethod(method);
-        req.setEndpoint(url);
+        req.setEndpoint(encodeURLParams(url));
         /*init OAuth class for signing the request*/
         OAuth oa = new OAuth();    
         if(!oa.setService(SERVICENAME)&&(!Test.isRunningTest())) {
@@ -43,6 +51,34 @@ public with sharing class OdeskConnector {
         System.debug('Received body -- '+body);
         
         return body;     
+    }
+
+    public static String encodeURLParams(String url){
+        String encodedURL = '';
+        if(String.isNotBlank(url)){
+            for(String splt : url.split('&')){
+                List<String> kv = splt.split('=');
+                if(kv.size() > 1){
+                    encodedURL = encodedURL+'&'+kv[0]+'='+urlEncode(kv[1]);
+                }
+                else{
+                    encodedURL = String.isBlank(encodedURL) ? splt : (encodedURL+'&'+splt);
+                }
+            }
+        }
+        else{
+            encodedURL = url;
+        }
+
+        return encodedURL;
+    }
+
+    private static String urlEncode(String url){
+        if(String.isNotBlank(url)){
+            url = EncodingUtil.urlEncode(url, 'UTF-8').replace('+','%20');
+        }
+
+        return url;
     }
 
 }
